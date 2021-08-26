@@ -1,0 +1,27 @@
+from selenium import webdriver
+import time
+from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException
+
+datadict = {}
+
+
+PATH = r"/Users/juanberasateguigallego/Desktop/chromedriver"
+
+driver = webdriver.Chrome(PATH)
+driver.get("https://www.salestaxinstitute.com/resources/rates")
+time.sleep(10)
+
+button = driver.find_element_by_xpath('//*[@id="popmake-13168"]/button')
+button.click()
+time.sleep(2)
+for x in range(1,54):
+    try:
+        state = driver.find_element_by_xpath('//*[@id="interior"]/div/div/table/tbody/tr['+str(x)+']/td[1]/a').text
+        tax_rate = driver.find_element_by_xpath('//*[@id="interior"]/div/div/table/tbody/tr['+str(x)+']/td[2]/p').text
+        datadict[state] = tax_rate
+    except NoSuchElementException:
+        continue
+
+stateask = str(input('Enter the state (capitalized) to see the applicable sales tax rate'))
+print('The sales tax rate at',stateask,'is of',datadict.get(stateask))
+
